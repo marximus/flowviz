@@ -12,18 +12,21 @@ class FlowAnimation:
     ----------
     video : ndarray, shape (N, H, W)
         Sequence of images.
-    vector : ndarray, shape (2, N, H, W)
+    vector : ndarray, shape (2, N, H, W), optional
         An array containing the u (vector[0]) and v (vector[1]) components of vectors. Vectors will be drawn
         at equally spaced points on the grid from (x, y) to (x+u, y+v).
     vector_step : int, optional
         Only plot every `vector_step` arrow.
+    scale : float, optional
+        Scale size of output. If scale == 1 (default) the output size will be W x H, where W and H are the width
+        and height of `video` and
+    dpi : int, optional
+        Dots per inch passed to Figure. Does not actually change outputs of save() or to_rgba() but is included
+        to support features in the future.
     imshow_kws : dict, optional
         Keyword arguments passed to `Axes.imshow`.
     quiver_kws : dict, optional
         Keyword arguments passed to `Axes.quiver`.
-    dpi : int, optional
-        Dots per inch passed to Figure. Does not actually change outputs of save() or to_rgba() but is included
-        to support features in the future.
 
     Attributes
     ----------
@@ -35,8 +38,12 @@ class FlowAnimation:
         Image displayed on axis.
     quiver : matplotlib Quiver
         Quiver object used to display vectors on axis.
+    figwidth : int
+        Width of output (in pixels)
+    figheight : int
+        Height of output (in pixels)
     """
-    def __init__(self, video, vector=None, vector_step=1, imshow_kws=None, quiver_kws=None, dpi=100):
+    def __init__(self, video, vector=None, vector_step=1, scale=1.0, dpi=100, imshow_kws=None, quiver_kws=None):
         # TODO: Allow NxHxWx3 and NxHxWx4 video arrays
         if video.ndim != 3:
             quit('video must have 3 dimensions')
@@ -55,9 +62,9 @@ class FlowAnimation:
         quiver_kws.update(dict(angles='xy', scale_units='xy', scale=1, pivot='tail'))
 
         N, H, W = video.shape
+        figsize = (np.array((W, H)) * scale).astype(np.int)
 
-        figsize = np.array((W, H)) / dpi
-        fig = Figure(figsize=figsize, dpi=dpi, frameon=False)
+        fig = Figure(figsize=figsize/dpi, dpi=dpi, frameon=False)
         FigureCanvasAgg(fig)
         ax = fig.add_axes((0, 0, 1, 1))
         ax.axis('off')
@@ -78,7 +85,8 @@ class FlowAnimation:
         self.ax = ax
         self.im = im
         self.quiver = quiver
-        self.N, self.H, self.W = N, H, W
+        self.N = N
+        self.figwidth, self.figheight = figsize
 
         self._video = video
         self._UV = UV
@@ -124,7 +132,7 @@ class FlowAnimation:
         rgba : ndarray, shape (N, H, W, 4)
             An array of N RGBA images with height H and width W.
         """
-        rgba = np.empty((self.N, self.H, self.W, 4), dtype=np.uint8)
+        rgba = np.empty((self.N, self.figheight, self.figwidth, 4), dtype=np.uint8)
         for i in range(self.N):
             self._draw_frame(i)
             self.fig.canvas.draw()
