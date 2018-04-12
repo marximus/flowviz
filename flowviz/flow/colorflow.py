@@ -1,6 +1,6 @@
 import numpy as np
 
-import flowviz.colorcode as colorcode
+import flowviz.flow.colorcode as colorcode
 
 
 """
