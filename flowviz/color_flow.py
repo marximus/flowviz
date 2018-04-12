@@ -12,25 +12,14 @@ UNKNOWN_FLOW_THRESH = 1e9
 """
 flowIO.cpp
 """
-def unknown_flow(u, v):
-    """
-
-    Parameters
-    ----------
-    u : float
-    v : float
-
-    Returns
-    -------
-    bool
-    """
+def _unknown_flow(u, v):
     return (np.fabs(u) > UNKNOWN_FLOW_THRESH) | (np.fabs(v) > UNKNOWN_FLOW_THRESH) | np.isnan(u) | np.isnan(v)
 
 
 """
 color_flow.cpp
 """
-def MotionToColor(motim, maxmotion=None, verbose=False):
+def motion_to_color(motim, maxmotion=None, verbose=False):
     """
 
     Parameters
@@ -44,8 +33,7 @@ def MotionToColor(motim, maxmotion=None, verbose=False):
     colim : ndarray, dtype uint8, shape (height, width, 3)
         Colored image.
     """
-    sh = motim.shape
-    width, height = sh[1], sh[0]
+    height, width, _ = motim.shape
     colim = np.zeros((height, width, 3), dtype=np.uint8)
 
     # determine motion range
@@ -53,7 +41,7 @@ def MotionToColor(motim, maxmotion=None, verbose=False):
     minx, miny = motim[:, :, 0].min(), motim[:, :, 1].min()
     fx = motim[:, :, 0]
     fy = motim[:, :, 1]
-    rad = np.sqrt(fx * fx + fy * fy)
+    rad = np.sqrt(fx**2 + fy**2)
     maxrad = rad.max()
     print("max motion: {:.4f}   motion range: u = {:.3f} .. {:.3f};  v = {:.3f} .. {:.3f}".format(
         maxrad, minx, maxx, miny, maxy
@@ -68,29 +56,23 @@ def MotionToColor(motim, maxmotion=None, verbose=False):
     if verbose:
         print("normalizing by {}".format(maxrad))
 
-    for y in range(0, height):
-        for x in range(0, width):
-            fx = motim[y, x, 0]
-            fy = motim[y, x, 1]
-            pix = colim[y, x]
-            if unknown_flow(fx, fy):
-                pix[0] = pix[1] = pix[2] = 0
-            else:
-                colorcode.computeColor(fx/maxrad, fy/maxrad, pix)
+    colorcode.compute_color(fx/maxrad, fy/maxrad, colim)
+
+    idx = _unknown_flow(fx, fy)
+    colim[idx] = 0
 
     return colim
 
 
-def main(flowname, outname, maxmotion=None):
+def main(flowname, maxmotion=None):
     flow = np.load(flowname)
     flow = np.moveaxis(flow, 0, -1)
     im = flow[0]
-    # sh = (im.shape[0], im.shape[1], 3)
-    # outim = np.zeros(sh, dtype=np.uint8)
-    outim = MotionToColor(im, maxmotion)
+
+    outim = motion_to_color(im, maxmotion)
 
     # save to file
     from matplotlib.image import imsave
-    imsave(outname, outim, dpi=100)
+    imsave('color-flow.png', outim, dpi=100)
 
 
