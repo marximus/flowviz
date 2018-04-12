@@ -100,7 +100,7 @@ class FlowAnimation:
         if self._UV is not None:
             self.quiver.set_UVC(self._UV[idx, :, :, 0], self._UV[idx, :, :, 1])
 
-    def save(self, filename, fps=5, bitrate=-1, codec=None):
+    def save(self, filename, fps=5, bitrate=-1, codec=None, writer='file'):
         """
         Save movie file by drawing every frame.
 
@@ -114,13 +114,21 @@ class FlowAnimation:
             Number of bits used per second in the compressed movie, in kilobits per second.
         codec : string or None, optional
             The codec to use. If ``None`` (the default) the ``animation.codec`` rcParam is used.
+        writer : {'file', 'pipe'}
+            Determines if a file-based (FFMpegFileWriter) or pipe-based (FFMpegWriter) writer will be used. The
+            file-based writer makes use of the specified dpi and can produce nicer videos. The pipe-based writer
+            is quicker.
 
         Returns
         -------
         None
         """
-        # TODO: Should user be able to use other writers such as FFMpegFileWriter?
-        writer = animation.FFMpegWriter(fps=fps, bitrate=bitrate, codec=codec)
+        if not (writer == 'file' or writer == 'pipe'):
+            quit('writer must be file or pipe')
+
+        writer = animation.FFMpegWriter if writer=='pipe' else animation.FFMpegFileWriter
+
+        writer = writer(fps=fps, bitrate=bitrate, codec=codec)
         with writer.saving(self.fig, filename, self._dpi):
             for i in range(self.N):
                 self._draw_frame(i)
