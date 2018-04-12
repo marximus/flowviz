@@ -2,7 +2,10 @@
 
 ## Installation
 #### Conda
+With [conda](https://conda.io/docs/index.html) installed, run
+```
 > conda install -c mauricemarx flowviz
+```
 
 ## Usage
 For more examples, check out the Jupyter [notebook](notebooks/examples.ipynb).
@@ -15,6 +18,8 @@ anim = flowviz.FlowAnimation(video)
 anim.save('flow-animation.mp4')
 ```
 
-## Credits
+## Acknowledgments
+Code for coloring flow was adapted from the [Middlebury optical flow dataset](vision.middlebury.edu/flow/).
 
 ## License
+MIT License
