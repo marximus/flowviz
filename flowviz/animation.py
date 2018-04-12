@@ -13,7 +13,7 @@ class FlowAnimation:
 
     Parameters
     ----------
-    video : ndarray, shape (N, H, W)
+    video : ndarray, shape (N, H, W) or (N, H, W, 3) or (N, H, W, 4)
         Sequence of images.
     vector : ndarray, shape (N, H, W, 2), optional
         An array containing the u (vector[0]) and v (vector[1]) components of vectors. Vectors will be drawn
@@ -48,8 +48,10 @@ class FlowAnimation:
     """
     def __init__(self, video, vector=None, vector_step=1, scale=1.0, dpi=100, imshow_kws=None, quiver_kws=None):
         # TODO: Allow NxHxWx3 and NxHxWx4 video arrays
-        if video.ndim != 3:
-            quit('video must have 3 dimensions')
+        if not (video.ndim == 3 or video.ndim == 4):
+            quit('video must have 3 or 4 dimensions')
+        if video.ndim == 4 and not (video.shape[-1] == 3 or video.shape[-1] == 4):
+            quit('video must be NxHxWx3 or NxHxWx4')
         if vector is not None:
             if vector.ndim != 4:
                 quit('vector must have 4 dimensions')
@@ -60,11 +62,15 @@ class FlowAnimation:
 
         # set up keyword arguments
         imshow_kws = {} if imshow_kws is None else imshow_kws.copy()
-        imshow_kws.update(dict(animated=True, aspect='equal', cmap='gray', vmin=0, vmax=255))
+        imshow_kws.update(dict(animated=True, aspect='equal'))
         quiver_kws = {} if quiver_kws is None else quiver_kws.copy()
         quiver_kws.update(dict(angles='xy', scale_units='xy', scale=1, pivot='tail'))
 
-        N, H, W = video.shape
+        # if video is NxHxW use greyscale colormapping
+        if video.ndim == 3:
+            imshow_kws.update(dict(cmap='gray', vmin=0, vmax=255))
+
+        N, H, W = video.shape[:3]
         figsize = (np.array((W, H)) * scale).astype(np.int)
 
         fig = Figure(figsize=figsize/dpi, dpi=dpi, frameon=False)
@@ -72,7 +78,7 @@ class FlowAnimation:
         ax = fig.add_axes((0, 0, 1, 1))
         ax.axis('off')
 
-        im = ax.imshow(np.zeros((H, W), dtype=video.dtype), **imshow_kws)
+        im = ax.imshow(np.zeros_like(video[0]), **imshow_kws)
 
         if vector is None:
             UV = None
@@ -100,7 +106,7 @@ class FlowAnimation:
         if self._UV is not None:
             self.quiver.set_UVC(self._UV[idx, :, :, 0], self._UV[idx, :, :, 1])
 
-    def save(self, filename, fps=5, bitrate=-1, codec=None, writer='file'):
+    def save(self, filename, fps=5, bitrate=-1, codec=None, writer='pipe'):
         """
         Save movie file by drawing every frame.
 
@@ -114,7 +120,7 @@ class FlowAnimation:
             Number of bits used per second in the compressed movie, in kilobits per second.
         codec : string or None, optional
             The codec to use. If ``None`` (the default) the ``animation.codec`` rcParam is used.
-        writer : {'file', 'pipe'}
+        writer : {'pipe', 'file'}
             Determines if a file-based (FFMpegFileWriter) or pipe-based (FFMpegWriter) writer will be used. The
             file-based writer makes use of the specified dpi and can produce nicer videos. The pipe-based writer
             is quicker.
