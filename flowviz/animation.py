@@ -12,7 +12,7 @@ class FlowAnimation:
     ----------
     video : ndarray, shape (N, H, W)
         Sequence of images.
-    vector : ndarray, shape (2, N, H, W), optional
+    vector : ndarray, shape (N, H, W, 2), optional
         An array containing the u (vector[0]) and v (vector[1]) components of vectors. Vectors will be drawn
         at equally spaced points on the grid from (x, y) to (x+u, y+v).
     vector_step : int, optional
@@ -50,10 +50,10 @@ class FlowAnimation:
         if vector is not None:
             if vector.ndim != 4:
                 quit('vector must have 4 dimensions')
-            if vector.shape[0] != 2:
-                quit('shape of first vector dimension must be 2')
-            if vector.shape[1:] != video.shape:
-                quit('shape of last three dimensions of video and vector must match')
+            if vector.shape[-1] != 2:
+                quit('shape of last vector dimension must be 2')
+            if vector.shape[:-1] != video.shape:
+                quit('video and vector must have same length, height, and width')
 
         # set up keyword arguments
         imshow_kws = {} if imshow_kws is None else imshow_kws.copy()
@@ -77,7 +77,7 @@ class FlowAnimation:
         else:
             X, Y = np.meshgrid(np.arange(W), np.arange(H))
             X, Y = X[::vector_step, ::vector_step], Y[::vector_step, ::vector_step]
-            UV = vector[:, :, ::vector_step, ::vector_step]
+            UV = vector[:, ::vector_step, ::vector_step, :]
 
             quiver = ax.quiver(X, Y, np.zeros((H, W), dtype=UV.dtype), np.zeros((H, W), dtype=UV.dtype), **quiver_kws)
 
@@ -95,7 +95,7 @@ class FlowAnimation:
     def _draw_frame(self, idx):
         self.im.set_data(self._video[idx])
         if self._UV is not None:
-            self.quiver.set_UVC(self._UV[0, idx], self._UV[1, idx])
+            self.quiver.set_UVC(self._UV[idx, :, :, 0], self._UV[idx, :, :, 1])
 
     def save(self, filename, fps=5, bitrate=-1, codec=None):
         """
