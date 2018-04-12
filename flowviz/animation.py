@@ -1,3 +1,6 @@
+import tempfile
+import os
+
 import numpy as np
 import matplotlib.animation as animation
 from matplotlib.backends.backend_agg import FigureCanvasAgg
@@ -139,3 +142,38 @@ class FlowAnimation:
             rgba[i] = np.array(self.fig.canvas.renderer._renderer)
 
         return rgba
+
+    def to_jshtml(self, fps=5, loop=True):
+        """
+        Generate HTML representation of the animation.
+
+        Parameters
+        ----------
+        fps : int
+            Frames per second of movie.
+        loop : bool
+            Whether the video should loop or not.
+
+        Returns
+        -------
+        html : str
+            HTML representation of video.
+        """
+        default_mode = 'loop' if loop else 'once'
+
+        writer = animation.HTMLWriter(fps=fps, embed_frames=True, default_mode=default_mode)
+
+        # Can't open a second time while opened on windows. So we avoid
+        # deleting when closed, and delete manually later.
+        with tempfile.NamedTemporaryFile(suffix='.html', delete=False) as f:
+            with writer.saving(self.fig, f.name, self._dpi):
+                for i in range(self.N):
+                    self._draw_frame(i)
+                    writer.grab_frame()
+
+        with open(f.name) as fobj:
+            html = fobj.read()
+
+        os.remove(f.name)
+
+        return html
