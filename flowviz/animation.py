@@ -68,7 +68,7 @@ class FlowAnimation:
                 quit('vector must have 4 dimensions')
             if vector.shape[-1] != 2:
                 quit('shape of last vector dimension must be 2')
-            if vector.shape[:-1] != video.shape:
+            if vector.shape[:3] != video.shape[:3]:
                 quit('video and vector must have same length, height, and width')
 
         # set up keyword arguments
@@ -182,7 +182,7 @@ class FlowAnimation:
 
         return rgba
 
-    def to_jshtml(self, fps=5, loop=True):
+    def to_jshtml(self, fps=5, loop=True, embed_limit=20):
         """
         Generate HTML representation of the animation.
 
@@ -192,6 +192,8 @@ class FlowAnimation:
             Frames per second of movie.
         loop : bool
             Whether the video should loop or not.
+        embed_limit : int, optional
+            Limit, in MB, of size of encoded animation in HTML.
 
         Returns
         -------
@@ -200,7 +202,7 @@ class FlowAnimation:
         """
         default_mode = 'loop' if loop else 'once'
 
-        writer = animation.HTMLWriter(fps=fps, embed_frames=True, default_mode=default_mode)
+        writer = animation.HTMLWriter(fps=fps, embed_frames=True, default_mode=default_mode, embed_limit=embed_limit)
 
         # Can't open a second time while opened on windows. So we avoid
         # deleting when closed, and delete manually later.
