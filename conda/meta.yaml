@@ -1,0 +1,30 @@
+package:
+  name: flowviz
+  version: "0.1"
+
+source:
+  git_url: https://github.com/marximus/flowviz.git
+
+build:
+  number: 0
+  script: python setup.py install --single-version-externally-managed --record=record.txt
+
+requirements:
+  build:
+    - python
+    - setuptools
+  run:
+    - python
+    - numpy
+    - matplotlib
+    - ffmpeg
+    - imageio
+
+test:
+  imports:
+    - flowviz
+
+about:
+  home: https://github.com/marximus/flowviz
+  license: MIT
+  license_file: LICENSE
