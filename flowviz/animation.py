@@ -55,21 +55,21 @@ class FlowAnimation:
     def __init__(self, video, video2=None, vector=None, vector_step=1, scale=1.0, dpi=100,
                  video2_alpha=0.5, imshow_kws_1=None, imshow_kws_2=None, quiver_kws=None):
         if not (video.ndim == 3 or video.ndim == 4):
-            quit('video must have 3 or 4 dimensions')
+            raise ValueError('video must have 3 or 4 dimensions')
         if video.ndim == 4 and not (video.shape[-1] == 3 or video.shape[-1] == 4):
-            quit('video must be NxHxWx3 or NxHxWx4')
+            raise ValueError('video must be NxHxWx3 or NxHxWx4')
         if video2 is not None:
             if not (video2.ndim == 3 or video2.ndim == 4):
-                quit('video2 must have 3 or 4 dimensions')
+                raise ValueError('video2 must have 3 or 4 dimensions')
             if video2.ndim == 4 and not (video2.shape[-1] == 3 or video2.shape[-1] == 4):
-                quit('video2 must be NxHxWx3 or NxHxWx4')
+                raise ValueError('video2 must be NxHxWx3 or NxHxWx4')
         if vector is not None:
             if vector.ndim != 4:
-                quit('vector must have 4 dimensions')
+                raise ValueError('vector must have 4 dimensions')
             if vector.shape[-1] != 2:
-                quit('shape of last vector dimension must be 2')
+                raise ValueError('shape of last vector dimension must be 2')
             if vector.shape[:3] != video.shape[:3]:
-                quit('video and vector must have same length, height, and width')
+                raise ValueError('video and vector must have same length, height, and width')
 
         # set up keyword arguments
         imshow_kws_1 = {} if imshow_kws_1 is None else imshow_kws_1.copy()
@@ -155,7 +155,7 @@ class FlowAnimation:
         None
         """
         if not (writer == 'file' or writer == 'pipe'):
-            quit('writer must be file or pipe')
+            raise ValueError('writer must be file or pipe')
 
         writer = animation.FFMpegWriter if writer == 'pipe' else animation.FFMpegFileWriter
 
