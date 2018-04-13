@@ -1,4 +1,5 @@
 # Flowviz
+Flowviz is a Python animation library based on matplotlib that provides a high-level interface for visualizing flow. 
 
 ## Installation
 #### Conda
