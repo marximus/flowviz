@@ -5,7 +5,14 @@ Flowviz is a Python animation library based on matplotlib that provides a high-l
 #### Conda
 With [conda](https://conda.io/docs/index.html) installed, run
 ```
-> conda install -c mauricemarx flowviz
+conda install -c mauricemarx flowviz
+```
+#### Source
+If you plan to edit the code, you can install manually.
+```
+git clone https://github.com/marximus/flowviz
+cd flowviz
+pip install -e .
 ```
 
 ## Usage
