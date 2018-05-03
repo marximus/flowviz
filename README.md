@@ -16,7 +16,7 @@ pip install -e .
 ```
 
 ## Usage
-For more examples, check out the Jupyter [notebook](notebooks/examples.ipynb).
+For more examples, check out the Jupyter [notebook](https://nbviewer.jupyter.org/github/marximus/flowviz/blob/master/notebooks/examples.ipynb).
 ```python
 import flowviz
 import flowviz.flow.flowio as flowio
