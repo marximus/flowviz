@@ -3,7 +3,7 @@ This code was adapted from the C++ code here: http://vision.middlebury.edu/flow/
 """
 import numpy as np
 
-import flowviz.flow.colorcode as colorcode
+import flowviz.colorcode as colorcode
 
 
 """
@@ -71,7 +71,7 @@ def motion_to_color(inmotim, maxmotion=None, verbose=False):
     for i in range(length):
         fx = motim[i, :, :, 0]
         fy = motim[i, :, :, 1]
-        colorcode.compute_color(fx/maxrad, fy/maxrad, colim[i])
+        colorcode.compute_color(fx / maxrad, fy / maxrad, colim[i])
 
     fx = motim[:, :, :, 0]
     fy = motim[:, :, :, 1]
