@@ -27,7 +27,7 @@ anim.save('flow-animation.mp4')
 ```
 
 ## Acknowledgments
-Code for coloring flow was adapted from the [Middlebury optical flow dataset](vision.middlebury.edu/flow/).
+Code for coloring flow was adapted from the [Middlebury optical flow dataset](http://vision.middlebury.edu/flow).
 
 ## License
 MIT License
