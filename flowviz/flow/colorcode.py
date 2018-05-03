@@ -1,3 +1,6 @@
+"""
+This code was adapted from the C++ code here: http://vision.middlebury.edu/flow/code/flow-code.zip
+"""
 import sys
 import numpy as np
 
