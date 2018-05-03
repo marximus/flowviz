@@ -24,15 +24,15 @@ class FlowAnimation:
         Only plot every `vector_step` arrow.
     scale : float, optional
         Scale size of output. If scale == 1 (default) the output size will be W x H, where W and H are the width
-        and height of `video` and
+        and height of `video`.
     dpi : int, optional
         Dots per inch passed to Figure. Does not actually change outputs of save() or to_rgba() but is included
         to support features in the future.
     video2_alpha : float, optional
         Value of alpha passed to Axes.imshow for video2.
-    imshow_kws_1 : dict, optional
+    video_kws : dict, optional
         Keyword arguments passed to `Axes.imshow` for video.
-    imshow_kws_2 : dict, optional
+    video2_kws : dict, optional
         Keyword arguments passed to `Axes.imshow` for video2.
     quiver_kws : dict, optional
         Keyword arguments passed to `Axes.quiver`.
@@ -53,7 +53,7 @@ class FlowAnimation:
         Height of output (in pixels)
     """
     def __init__(self, video, video2=None, vector=None, vector_step=1, scale=1.0, dpi=100,
-                 video2_alpha=0.5, imshow_kws_1=None, imshow_kws_2=None, quiver_kws=None):
+                 video2_alpha=0.5, video_kws=None, video2_kws=None, quiver_kws=None):
         if not (video.ndim == 3 or video.ndim == 4):
             raise ValueError('video must have 3 or 4 dimensions')
         if video.ndim == 4 and not (video.shape[-1] == 3 or video.shape[-1] == 4):
@@ -72,18 +72,18 @@ class FlowAnimation:
                 raise ValueError('video and vector must have same length, height, and width')
 
         # set up keyword arguments
-        imshow_kws_1 = {} if imshow_kws_1 is None else imshow_kws_1.copy()
-        imshow_kws_1.update(dict(animated=True, aspect='equal', interpolation='none'))
-        imshow_kws_2 = {} if imshow_kws_2 is None else imshow_kws_2.copy()
-        imshow_kws_2.update(dict(animated=True, aspect='equal', interpolation='none', alpha=video2_alpha))
+        video_kws = {} if video_kws is None else video_kws.copy()
+        video_kws.update(dict(animated=True, aspect='equal', interpolation='none'))
+        video2_kws = {} if video2_kws is None else video2_kws.copy()
+        video2_kws.update(dict(animated=True, aspect='equal', interpolation='none', alpha=video2_alpha))
         quiver_kws = {} if quiver_kws is None else quiver_kws.copy()
         quiver_kws.update(dict(angles='xy', scale_units='xy', scale=1, pivot='tail'))
 
         # if video is NxHxW use greyscale colormapping
         if video.ndim == 3:
-            imshow_kws_1.update(dict(cmap='gray', vmin=0, vmax=255))
+            video_kws.update(dict(cmap='gray', vmin=0, vmax=255))
         if video2 is not None and video2.ndim == 3:
-            imshow_kws_2.update(dict(cmap='gray', vmin=0, vmax=255))
+            video2_kws.update(dict(cmap='gray', vmin=0, vmax=255))
 
         N, H, W = video.shape[:3]
         figsize = (np.array((W, H)) * scale).astype(np.int)
@@ -93,13 +93,13 @@ class FlowAnimation:
         ax = fig.add_axes((0, 0, 1, 1))
         ax.axis('off')
 
-        im = ax.imshow(np.zeros_like(video[0]), **imshow_kws_1)
+        im = ax.imshow(np.zeros_like(video[0]), **video_kws)
         if video2 is None:
             im2 = None
         else:
             # TODO: Rather than using alpha, create new array of video2 with alpha channel where the transparency
             # is set based on the magnitude of pixel values.
-            im2 = ax.imshow(np.zeros_like(video2[0]), **imshow_kws_2)
+            im2 = ax.imshow(np.zeros_like(video2[0]), **video2_kws)
 
         if vector is None:
             UV = None
