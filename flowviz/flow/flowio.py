@@ -14,14 +14,15 @@
 #           the float values for u and v, interleaved, in row order, i.e.,
 #           u[row0,col0], v[row0,col0], u[row0,col1], v[row0,col1], ...
 #
-TAG_FLOAT = 202021.25
-TAG_STRING = "PIEH"
-
 import re
 import os
 
 import numpy as np
 import imageio
+
+
+TAG_FLOAT = 202021.25
+TAG_STRING = "PIEH"
 
 
 def read_flow(filename):

@@ -1,1 +1,1 @@
-from .animation import FlowAnimation
+from .animate import FlowAnimation
