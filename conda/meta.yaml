@@ -1,22 +1,29 @@
+{% set name = "flowviz" %}
+{% set version = "0.1" %}
+{% set user = "marximus" %}
+
 package:
-  name: flowviz
-#  version: "0.1"
-  version: {{ environ['VERSION'] }}
+  name: {{ name }}
+  version: {{ version }}
 
 source:
-  git_url: https://github.com/marximus/flowviz.git
+  # option 1
+  #path: ../
+  # option 2
+  #git_url: https://github.com/marximus/flowviz.git
+  #git_rev: master
+  # option 3
+  fn: {{ name }}-master.tar.gz
+  url: https://api.github.com/repos/{{ user }}/{{ name }}/tarball/master
 
 build:
+  script: python -m pip install --no-deps --ignore-installed .
   number: 0
-  script: python setup.py install --single-version-externally-managed --record=record.txt
-  script_env:
-    - VERSION
-    - CONDA_BLD_PATH
 
 requirements:
   build:
     - python
-    - setuptools
+    - pip
   run:
     - python
     - numpy
@@ -32,3 +39,4 @@ about:
   home: https://github.com/marximus/flowviz
   license: MIT
   license_file: LICENSE
+  summary: Python library for visualization of flow (vector fields)
