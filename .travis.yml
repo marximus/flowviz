@@ -38,3 +38,8 @@ install:
 
 script:
   - conda build ./conda  # assumes recipe directory is conda
+
+  # Upload conda packages to Anaconda Cloud. Use $(conda build ./conda --output) to get name of
+  # *.tar.bz2 conda package.
+  - anaconda -t ${CONDA_UPLOAD_TOKEN} upload -u mauricemarx --all $(conda build ./conda --output) --force
+  
