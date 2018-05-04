@@ -4,8 +4,8 @@ os : linux
 
 env:
   matrix:
-#    - CONDA_PY=27
-#    - CONDA_PY=35
+    - CONDA_PY=27
+    - CONDA_PY=35
     - CONDA_PY=36
 
 install:
@@ -39,8 +39,7 @@ install:
 script:
   - conda build ./conda  # assumes recipe directory is conda
 
-  # Upload conda packages to Anaconda Cloud. Use $(conda build ./conda --output) to get name of
-  # *.tar.bz2 conda package.
+  # Upload conda packages to Anaconda Cloud.
   - PKG_PATH="$(conda build ./conda --output)"
-  - anaconda upload --help
-  - anaconda -t ${CONDA_UPLOAD_TOKEN} upload -u mauricemarx --force ${PKG_PATH}
+  - USER="mauricemarx"
+  - anaconda -t ${CONDA_UPLOAD_TOKEN} upload -u ${USER} --force ${PKG_PATH}
