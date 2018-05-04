@@ -22,7 +22,7 @@ install:
   - |
     echo ""
     echo "Configuring conda."
-    source /Users/travis/miniconda3/bin/activate root
+    source /home/travis/miniconda3/bin/activate root
     conda config --remove channels defaults
     conda config --add channels defaults
     conda config --add channels conda-forge
