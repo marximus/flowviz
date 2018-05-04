@@ -29,17 +29,16 @@ install:
     conda config --set show_channel_urls true
     conda config --set auto_update_conda false
 
-  # Install conda-build, jinja2, and anaconda-client
   - conda install -n root --yes conda-build jinja2 anaconda-client
 
-  # Useful for debugging any issues with conda
   - conda info
   - conda config --show-sources
 
 script:
+  # Build conda package
   - conda build ./conda  # assumes recipe directory is conda
 
   # Upload conda packages to Anaconda Cloud.
   - PKG_PATH="$(conda build ./conda --output)"
   - USER="mauricemarx"
-  - anaconda -t ${CONDA_UPLOAD_TOKEN} upload -u ${USER} --force ${PKG_PATH}
+  - anaconda -t ${CONDA_UPLOAD_TOKEN} upload -u ${USER} --all --force ${PKG_PATH}
