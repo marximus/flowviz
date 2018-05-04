@@ -42,8 +42,5 @@ script:
   # Upload conda packages to Anaconda Cloud. Use $(conda build ./conda --output) to get name of
   # *.tar.bz2 conda package.
   - PKG_PATH="$(conda build ./conda --output)"
-  - anaconda -V
-  - anaconda config --show
-  - anaconda whoami
   - anaconda upload --help
-  - anaconda --show-traceback -v -t ${CONDA_UPLOAD_TOKEN} upload -u mauricemarx ${PKG_PATH} --force
+  - anaconda -t ${CONDA_UPLOAD_TOKEN} upload -u mauricemarx --force ${PKG_PATH}
