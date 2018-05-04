@@ -1,24 +1,39 @@
-language: python
-python:
-  # We don't actually use the Travis Python, but this keeps it organized.
-  - "2.7"
-  - "3.5"
-  - "3.6"
+language: generic
+
+os : linux
+
+env:
+  matrix:
+    - CONDA_PY=27
+    - CONDA_PY=35
+    - CONDA_PY=36
+
 install:
-  # Install Anaconda
-  - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
-      wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh;
-    else
-      wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
-    fi
-  - bash miniconda.sh -b -p $HOME/miniconda
-  - export PATH="$HOME/miniconda/bin:$PATH"
-  - hash -r
-  - conda config --set always_yes yes --set changeps1 no
-  - conda update -q conda
+  # Install Miniconda
+  - |
+    echo ""
+    echo "Installing a fresh version of Miniconda."
+    MINICONDA_URL="https://repo.continuum.io/miniconda"
+    MINICONDA_FILE="Miniconda3-latest-Linux-x86_64.sh"
+    curl -L -O "${MINICONDA_URL}/${MINICONDA_FILE}"
+    bash $MINICONDA_FILE -b
+
+  # Configure conda
+  - |
+    echo ""
+    echo "Configuring conda."
+    source /Users/travis/miniconda3/bin/activate root
+    conda config --remove channels defaults
+    conda config --add channels defaults
+    conda config --add channels conda-forge
+    conda config --set show_channel_urls true
+
+  # Install conda-build, jinja2, and anaconda-client
+  - conda install conda-build jinja2 anaconda-client
+
   # Useful for debugging any issues with conda
-  - conda info -a
-after_success:
-  - test $TRAVIS_BRANCH = "master" && conda install conda-build && conda install anaconda-client && bash conda/conda_upload.sh
+  - conda info
+  - conda config --show-sources
+
 script:
-  - python --version
+  - conda build ./conda  # assumes recipe directory is conda
