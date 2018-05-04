@@ -17,16 +17,8 @@ cd flowviz
 pip install -e .
 ```
 
-## Usage
-For more examples, check out the Jupyter [notebook](https://nbviewer.jupyter.org/github/marximus/flowviz/blob/master/notebooks/examples.ipynb).
-```python
-import flowviz
-import flowviz.flow.flowio as flowio
-
-video = flowio.read_image_collection('sample_data/images')
-anim = flowviz.FlowAnimation(video)
-anim.save('flow-animation.mp4')
-```
+## Examples
+For examples, check out the Jupyter [notebook](https://nbviewer.jupyter.org/github/marximus/flowviz/blob/master/notebooks/examples.ipynb).
 
 ## Acknowledgments
 Code for coloring flow was adapted from the [Middlebury optical flow dataset](http://vision.middlebury.edu/flow).
