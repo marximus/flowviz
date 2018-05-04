@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/marximus/flowviz.svg?branch=master)](https://travis-ci.com/marximus/flowviz)
+
 # Flowviz
 Flowviz is a Python animation library based on matplotlib that provides a high-level interface for visualizing flow. 
 
