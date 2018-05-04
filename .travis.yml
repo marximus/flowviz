@@ -4,8 +4,8 @@ os : linux
 
 env:
   matrix:
-    - CONDA_PY=27
-    - CONDA_PY=35
+#    - CONDA_PY=27
+#    - CONDA_PY=35
     - CONDA_PY=36
 
 install:
@@ -42,5 +42,9 @@ script:
   # Upload conda packages to Anaconda Cloud. Use $(conda build ./conda --output) to get name of
   # *.tar.bz2 conda package.
   - PKG_PATH="$(conda build ./conda --output)"
-  - echo ${PKG_PATH}
-  - anaconda -v -t ${CONDA_UPLOAD_TOKEN} upload -u mauricemarx ${PKG_PATH} --force
+  - USER="mauricemarx"
+  - anaconda -V
+  - anaconda config --show
+  - anaconda whoami
+  - anaconda upload --help
+  - anaconda --show-traceback -v -t ${CONDA_UPLOAD_TOKEN} upload -u ${USER} ${PKG_PATH} --force
