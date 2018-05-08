@@ -1,10 +1,10 @@
-[![Build Status](https://travis-ci.com/marximus/flowviz.svg?branch=master)](https://travis-ci.com/marximus/flowviz)
-
 # Flowviz
 Flowviz is a Python animation library based on matplotlib that provides a high-level interface for visualizing flow. 
 
 ## Installation
 #### Conda
+[![Build Status](https://travis-ci.com/marximus/flowviz.svg?branch=master)](https://travis-ci.com/marximus/flowviz)
+
 With [conda](https://conda.io/docs/index.html) installed, run
 ```
 conda install -c conda-forge -c mauricemarx flowviz
