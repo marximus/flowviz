@@ -7,12 +7,6 @@ package:
   version: {{ version }}
 
 source:
-  # option 1
-  #path: ../
-  # option 2
-  #git_url: https://github.com/marximus/flowviz.git
-  #git_rev: master
-  # option 3
   fn: {{ name }}-master.tar.gz
   url: https://api.github.com/repos/{{ user }}/{{ name }}/tarball/master
 
