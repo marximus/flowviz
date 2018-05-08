@@ -18,7 +18,14 @@ pip install -e .
 ```
 
 ## Examples
-For examples, check out the Jupyter [notebook](https://nbviewer.jupyter.org/github/marximus/flowviz/blob/master/notebooks/examples.ipynb).
+Check out the Jupyter [notebook](https://nbviewer.jupyter.org/github/marximus/flowviz/blob/master/notebooks/examples.ipynb).
+
+#### Vectors
+![](examples/output/vector.gif)
+#### Colors
+![](examples/output/color.gif)
+#### Vectors and Colors
+![](examples/output/vector_color.gif)
 
 ## Acknowledgments
 Code for coloring flow was adapted from the [Middlebury optical flow dataset](http://vision.middlebury.edu/flow).
