@@ -75,7 +75,7 @@ def compute_color(fx, fy, colim):
     a = np.arctan2(-fy, -fx) / np.pi
     fk = (a + 1.0) / 2.0 * (ncols - 1)
     # k0 = int(fk)
-    k0 = fk.astype(np.int)
+    k0 = fk.astype(np.int_)
     k1 = (k0 + 1) % ncols
     f = fk - k0
     # f = 0  // uncomment to see original color wheel
@@ -86,5 +86,5 @@ def compute_color(fx, fy, colim):
         idx = rad <= 1
         col[idx] = 1 - rad[idx] * (1 - col[idx])
         col[rad>1] = col[rad>1] * 0.75
-        colim[..., 2 - b] = (255.0 * col).astype(np.int)
+        colim[..., 2 - b] = (255.0 * col).astype(np.int_)
 

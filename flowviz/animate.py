@@ -86,7 +86,7 @@ class FlowAnimation:
             video2_kws.update(dict(cmap='gray', vmin=0, vmax=255))
 
         N, H, W = video.shape[:3]
-        figsize = (np.array((W, H)) * scale).astype(np.int)
+        figsize = (np.array((W, H)) * scale).astype(np.int_)
 
         fig = Figure(figsize=figsize/dpi, dpi=dpi, frameon=False)
         FigureCanvasAgg(fig)
